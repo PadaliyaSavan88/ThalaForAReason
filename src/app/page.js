@@ -48,7 +48,7 @@ export default function Home() {
       return false; // No digit has a relation with 7
     } else if (typeof value === 'string') {
       // Check if the string length is 7 or if it is equal to "seven"
-      if (value.length === 7 || value.toLowerCase() === "seven" || value.toLowerCase() === "dhoni" || value.toLowerCase() === "thala") {
+      if (value.length === 7 || value.toLowerCase() === "seven" || value.toLowerCase() === "dhoni" || value.toLowerCase() === "thala" || value.toLowerCase() === "mahi") {
         playmusic(true)
         setbackgroundColor('#C1F2B0')
         setTimeout(() => {
