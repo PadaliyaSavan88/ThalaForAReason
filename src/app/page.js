@@ -1,95 +1,102 @@
+"use client"
+
 import Image from 'next/image'
 import styles from './page.module.css'
+import 'bootstrap/dist/css/bootstrap.css';
+import { useState } from 'react';
 
 export default function Home() {
+  const [value, setValue] = useState('');
+  const [backgroundColor, setbackgroundColor] = useState('white')
+  const playmusic = (isThala) => {
+    console.log(isThala)
+    const audio = isThala ? new Audio('/thala.mp3') : new Audio('/moye-moye.mp4');
+    audio.volume = 0.5; // Adjust the volume as needed
+    audio.loop = false;
+    audio.play().catch(error => console.error('Error playing audio:', error));
+  }
+  const checkAnswer = () => {
+    if (!isNaN(value)) {
+      let numStr = value.toString();
+      let sum = 0;
+      let combinationResult = 0;
+
+      // Iterate through each digit of the number
+      for (let i = 0; i < numStr.length; i++) {
+        // Convert the digit back to a number
+        let digit = parseInt(numStr[i]);
+
+        // Update the sum
+        sum += digit;
+
+        // Update the combination result (alternating addition and subtraction)
+        if (i % 2 === 0) {
+          combinationResult += digit;
+        } else {
+          combinationResult -= digit;
+        }
+      }
+
+      // Check if the sum or combination result is 7
+      playmusic(sum === 7 || combinationResult === 7)
+      let color = (sum === 7 || combinationResult === 7) ? '#C1F2B0' : '#C70039'
+      setbackgroundColor(color)
+      setTimeout(() => {
+        setbackgroundColor('white')
+      }, 7000)
+      // playmusic(false)
+      return false; // No digit has a relation with 7
+    } else if (typeof value === 'string') {
+      // Check if the string length is 7 or if it is equal to "seven"
+      if (value.length === 7 || value.toLowerCase() === "seven" || value.toLowerCase() === "dhoni" || value.toLowerCase() === "thala") {
+        playmusic(true)
+        setbackgroundColor('#C1F2B0')
+        setTimeout(() => {
+          setbackgroundColor('white')
+        }, 7000)
+        return true;
+      }
+      setbackgroundColor('#C70039')
+      playmusic(false)
+    }
+  }
+
+  const cardStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100vh',
+    backgroundColor,
+  };
+
+  const handleInputChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Do something with the input value, for example, log it
+    console.log('Input Value:', value);
+    checkAnswer()
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      <div style={cardStyle} className='card'>
+        <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '8px', backgroundColor: 'white' }}>
+          <p>Is Input Related To Thala...</p>
+          <form onSubmit={handleSubmit}>
+            {/* Your form elements go here */}
+            <label className='p-2'>
+              <input type="text" className='form-control' placeholder='Input' required value={value} onChange={handleInputChange} />
+            </label>
+            <div className='p-2'>
+              <button type="submit" className='btn btn-primary'>Submit</button>
+            </div>
+          </form>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </>
   )
 }
