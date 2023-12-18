@@ -10,7 +10,7 @@ export default function Home() {
   const [backgroundColor, setbackgroundColor] = useState('white')
   const playmusic = (isThala) => {
     console.log(isThala)
-    const audio = isThala ? new Audio('/thala.mp3') : new Audio('/moye-moye.mp4');
+    const audio = isThala ? new Audio('/thala.m4a') : new Audio('/moye-moye.mp4');
     audio.volume = 0.5; // Adjust the volume as needed
     audio.loop = false;
     audio.play().catch(error => console.error('Error playing audio:', error));
